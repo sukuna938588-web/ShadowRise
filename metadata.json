@@ -1,0 +1,6 @@
+{
+  "name": "ShadowRise",
+  "description": "Solo Leveling themed gamified fitness and RPG habit tracker",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
