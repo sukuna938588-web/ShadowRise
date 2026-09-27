@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { Flame, ChevronRight, Target, Sparkles } from 'lucide-react';
 import type { Store } from '@/store';
-import type { ScreenName, ExerciseTimerMode, ExerciseEntry } from '@/types';
+import type { ScreenName, ExerciseTimerMode, ExerciseEntry, SleepSession } from '@/types';
 import { RankBadge } from '@/components/RankBadge';
 import { XPBar } from '@/components/XPBar';
 import { QuestCard } from '@/components/QuestCard';
@@ -24,6 +24,11 @@ import { CustomAlarmModal } from '@/components/CustomAlarmModal';
 import { ShadowAuraAvatar } from '@/components/ShadowAuraAvatar';
 import { SystemTypewriterBanner } from '@/components/SystemTypewriterBanner';
 import { RankUpCinematicModal } from '@/components/RankUpCinematicModal';
+import { SleepFloatingButton } from '@/components/SleepFloatingButton';
+import { HunterRecoveryReportModal } from '@/components/HunterRecoveryReportModal';
+import { SleepHistoryModal } from '@/components/SleepHistoryModal';
+import { XPProgressCard } from '@/components/XPProgressCard';
+import { XPHistoryModal } from '@/components/XPHistoryModal';
 import { rankConfig } from '@/data/initialData';
 
 interface HomeScreenProps {
@@ -42,6 +47,9 @@ export function HomeScreen({ store, onNavigate }: HomeScreenProps) {
   const [isCustomAlarmOpen, setIsCustomAlarmOpen] = useState(false);
   const [isAICoachOpen, setIsAICoachOpen] = useState(false);
   const [isRankUpCinematicOpen, setIsRankUpCinematicOpen] = useState(false);
+  const [isSleepHistoryOpen, setIsSleepHistoryOpen] = useState(false);
+  const [isXPHistoryOpen, setIsXPHistoryOpen] = useState(false);
+  const [previewReport, setPreviewReport] = useState<SleepSession | null>(null);
 
   // Workout Logger & History Modals
   const [isWorkoutLoggerOpen, setIsWorkoutLoggerOpen] = useState(false);
@@ -73,7 +81,7 @@ export function HomeScreen({ store, onNavigate }: HomeScreenProps) {
   const completedCount = todayQuests.filter((q) => q.completed).length;
 
   return (
-    <div className="px-4 pt-[env(safe-area-inset-top)] pb-28 space-y-5">
+    <div className="px-4 pt-[env(safe-area-inset-top)] pb-28 sm:pb-32 space-y-5">
       {/* Top bar */}
       <div className="flex items-center justify-between pt-4 animate-fade-in">
         <div className="flex items-center gap-2">
@@ -122,7 +130,7 @@ export function HomeScreen({ store, onNavigate }: HomeScreenProps) {
           <RankBadge
             rank={profile.rank}
             size="xl"
-            onClick={() => setIsRankUpCinematicOpen(true)}
+            onClick={() => store.triggerRankUpCelebration(profile.rank)}
           />
         </div>
 
@@ -139,11 +147,11 @@ export function HomeScreen({ store, onNavigate }: HomeScreenProps) {
         {/* Cinematic Awakening trigger hint */}
         <button
           type="button"
-          onClick={() => setIsRankUpCinematicOpen(true)}
-          className="mt-2 text-[10px] font-mono tracking-widest uppercase text-primary-300 hover:text-primary-100 flex items-center gap-1.5 glass px-3 py-1 rounded-full border border-primary-500/20 active:scale-95 transition-all shadow-sm group"
+          onClick={() => store.triggerRankUpCelebration(profile.rank)}
+          className="mt-2 text-[10px] font-mono tracking-widest uppercase text-primary-300 hover:text-primary-100 flex items-center gap-1.5 glass px-3.5 py-1.5 rounded-full border border-primary-500/30 active:scale-95 transition-all shadow-sm group cursor-pointer hover:border-purple-400/60 hover:bg-purple-950/40"
         >
-          <Sparkles className="w-2.5 h-2.5 text-warning-400 group-hover:rotate-12 transition-transform" />
-          <span>Cinematic Rank Awakening</span>
+          <Sparkles className="w-3 h-3 text-warning-400 group-hover:rotate-12 transition-transform" />
+          <span>Awakening Celebration</span>
         </button>
       </div>
 
@@ -198,8 +206,17 @@ export function HomeScreen({ store, onNavigate }: HomeScreenProps) {
         </div>
       </div>
 
+      {/* Premium Hunter XP Progress Card */}
+      <XPProgressCard
+        totalXP={profile.totalXp ?? profile.xp ?? 0}
+        onOpenHistory={() => setIsXPHistoryOpen(true)}
+        onOpenRankCinematic={() => setIsRankUpCinematicOpen(true)}
+      />
+
       {/* Fitness metrics rings */}
-      <FitnessMetrics metrics={profile.metrics} />
+      <FitnessMetrics
+        metrics={profile?.metrics ?? { exerciseProgress: 0, hydration: 0, sleepQuality: 0, recoveryScore: 0 }}
+      />
 
       {/* Quick actions */}
       <QuickActions
@@ -233,7 +250,15 @@ export function HomeScreen({ store, onNavigate }: HomeScreenProps) {
       />
 
       {/* Sleep tracker */}
-      <SleepTracker health={health} onLogSleep={store.logSleep} />
+      <SleepTracker
+        health={health}
+        onLogSleep={store.logSleep}
+        sleepStartTime={store.sleepStartTime}
+        latestSession={store.sleepHistory?.[0]}
+        onOpenHistory={() => setIsSleepHistoryOpen(true)}
+        onStartSleep={store.startSleep}
+        onWakeUp={store.wakeUp}
+      />
 
       {/* Weight & health tracker */}
       <WeightTracker weight={weight} trend={weightTrend} onLogWeight={store.logWeight} />
@@ -380,6 +405,45 @@ export function HomeScreen({ store, onNavigate }: HomeScreenProps) {
         rank={profile.rank}
         level={profile.level}
         unlockedTitle={`${profile.rank} Rank Shadow Sovereign`}
+        totalXp={profile.totalXp ?? profile.xp ?? 0}
+      />
+
+      {/* Floating Action Button for Sleep System (Shows [ Sleep ] before sleep, [ Wake Up ] after sleep starts) */}
+      <SleepFloatingButton
+        sleepStartTime={store.sleepStartTime}
+        onStartSleep={store.startSleep}
+        onWakeUp={store.wakeUp}
+      />
+
+      {/* Hunter Recovery Report Modal */}
+      <HunterRecoveryReportModal
+        report={store.activeRecoveryReport || previewReport}
+        onClose={() => {
+          store.closeRecoveryReport();
+          setPreviewReport(null);
+        }}
+      />
+
+      {/* Sleep History Archive Modal */}
+      <SleepHistoryModal
+        isOpen={isSleepHistoryOpen}
+        onClose={() => setIsSleepHistoryOpen(false)}
+        sleepHistory={store.sleepHistory}
+        onClearHistory={store.clearSleepHistory}
+        onSelectSession={(session) => {
+          setPreviewReport(session);
+          setIsSleepHistoryOpen(false);
+        }}
+      />
+
+      {/* Permanent XP History Archive Modal */}
+      <XPHistoryModal
+        isOpen={isXPHistoryOpen}
+        onClose={() => setIsXPHistoryOpen(false)}
+        history={store.xpHistory}
+        totalXP={profile.totalXp ?? profile.xp ?? 0}
+        level={profile.level}
+        rank={profile.rank}
       />
     </div>
   );

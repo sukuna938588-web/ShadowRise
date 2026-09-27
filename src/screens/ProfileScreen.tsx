@@ -8,8 +8,6 @@ import {
   Target,
   TrendingUp,
   Award,
-  LogOut,
-  Mail,
   Dumbbell,
   Droplets,
   Moon,
@@ -21,6 +19,10 @@ import {
   Calendar,
   Layers,
   Bell,
+  RotateCcw,
+  AlertTriangle,
+  History,
+  Volume2,
 } from 'lucide-react';
 import type { Store } from '@/store';
 import { RankBadge } from '@/components/RankBadge';
@@ -28,9 +30,11 @@ import { MetricRing } from '@/components/MetricRing';
 import { BMICalculator } from '@/components/BMICalculator';
 import { HealthIssuesTracker } from '@/components/HealthIssuesTracker';
 import { WaterReminderSettingsModal } from '@/components/WaterReminderModal';
+import { RankHistoryTimeline } from '@/components/RankHistoryTimeline';
+import { XPHistoryModal } from '@/components/XPHistoryModal';
+import { SoundsAndAlertsModal } from '@/components/SoundsAndAlertsModal';
 import { rankConfig } from '@/data/initialData';
 import { HUNTER_AVATARS } from '@/data/hunterAvatars';
-import { supabase } from '@/lib/supabase';
 
 interface ProfileScreenProps {
   store: Store;
@@ -39,11 +43,14 @@ interface ProfileScreenProps {
 
 export function ProfileScreen({ store, onSignOut }: ProfileScreenProps) {
   const { profile } = store;
+  const [showXPHistory, setShowXPHistory] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const [editing, setEditing] = useState(false);
   const [showAvatarPicker, setShowAvatarPicker] = useState(false);
   const [isWaterSettingsOpen, setIsWaterSettingsOpen] = useState(false);
+  const [isSoundsModalOpen, setIsSoundsModalOpen] = useState(false);
+  const [showResetConfirm, setShowResetConfirm] = useState(false);
 
   // Form edit states
   const [name, setName] = useState(profile?.name ?? '');
@@ -131,12 +138,9 @@ export function ProfileScreen({ store, onSignOut }: ProfileScreenProps) {
     setShowAvatarPicker(false);
   };
 
-  const handleSignOut = async () => {
-    try {
-      await supabase.auth.signOut();
-    } catch {
-      // ignore
-    }
+  const handleResetRegistration = () => {
+    store.resetRegistration();
+    setShowResetConfirm(false);
     onSignOut?.();
   };
 
@@ -385,29 +389,45 @@ export function ProfileScreen({ store, onSignOut }: ProfileScreenProps) {
             <div className="mt-4">
               <h2 className="font-display font-bold text-2xl text-slate-100">{profile.name}</h2>
               <div className="flex items-center justify-center gap-1.5 mt-1">
-                <Mail className="w-3 h-3 text-slate-500" />
-                <p className="text-xs font-mono text-slate-500">{profile.email}</p>
+                <span className="text-[11px] font-mono text-primary-400 uppercase tracking-widest px-2.5 py-0.5 rounded-full bg-primary-500/10 border border-primary-500/30">
+                  [ AWAKENED HUNTER ]
+                </span>
               </div>
             </div>
           )}
 
-          {/* Level & Rank Chips */}
-          <div className="flex items-center gap-3 mt-4">
-            <div className="glass rounded-xl px-4 py-2 flex items-center gap-2">
+          {/* Level, Rank & Total XP Chips */}
+          <div className="flex items-center justify-center flex-wrap gap-2.5 mt-4">
+            <div className="glass rounded-xl px-3.5 py-1.5 flex items-center gap-2">
               <span className="text-[10px] font-mono uppercase tracking-wider text-slate-400">Level</span>
-              <span className="text-lg font-display font-bold gradient-text">{profile.level}</span>
+              <span className="text-base font-display font-bold gradient-text">{profile.level}</span>
             </div>
             <div
-              className="rounded-xl px-4 py-2 flex items-center gap-2"
+              className="rounded-xl px-3.5 py-1.5 flex items-center gap-2"
               style={{ background: rankInfo.color + '15', border: `1px solid ${rankInfo.color}40` }}
             >
               <span className="text-[10px] font-mono uppercase tracking-wider" style={{ color: rankInfo.color }}>
                 Rank
               </span>
-              <span className="text-lg font-display font-bold" style={{ color: rankInfo.color }}>
+              <span className="text-base font-display font-bold" style={{ color: rankInfo.color }}>
                 {profile.rank}
               </span>
             </div>
+            <div className="glass rounded-xl px-3.5 py-1.5 flex items-center gap-2">
+              <span className="text-[10px] font-mono uppercase tracking-wider text-slate-400">Total XP</span>
+              <span className="text-base font-display font-bold text-amber-300">
+                {(profile.totalXp ?? profile.xp ?? 0).toLocaleString()}
+              </span>
+            </div>
+            <button
+              type="button"
+              onClick={() => setShowXPHistory(true)}
+              className="rounded-xl px-3 py-1.5 flex items-center gap-1.5 bg-primary-950/80 hover:bg-primary-900/80 border border-primary-500/40 text-primary-300 hover:text-white transition-all text-[10px] font-mono font-bold tracking-wider cursor-pointer shadow-sm active:scale-95"
+              title="Open XP History"
+            >
+              <History className="w-3 h-3 text-warning-400" />
+              <span>XP History</span>
+            </button>
           </div>
         </div>
       </div>
@@ -542,7 +562,7 @@ export function ProfileScreen({ store, onSignOut }: ProfileScreenProps) {
           <MetricRing
             icon={<Dumbbell className="w-4 h-4 text-primary-400" />}
             label="Exercise"
-            value={profile.metrics.exerciseProgress}
+            value={profile?.metrics?.exerciseProgress ?? 0}
             color="#a78bfa"
             glow="rgba(167,139,250,0.5)"
             delay={0}
@@ -550,7 +570,7 @@ export function ProfileScreen({ store, onSignOut }: ProfileScreenProps) {
           <MetricRing
             icon={<Droplets className="w-4 h-4 text-secondary-400" />}
             label="Hydration"
-            value={profile.metrics.hydration}
+            value={profile?.metrics?.hydration ?? 0}
             color="#60a5fa"
             glow="rgba(96,165,250,0.5)"
             delay={80}
@@ -558,7 +578,7 @@ export function ProfileScreen({ store, onSignOut }: ProfileScreenProps) {
           <MetricRing
             icon={<Moon className="w-4 h-4 text-primary-300" />}
             label="Sleep"
-            value={profile.metrics.sleepQuality}
+            value={profile?.metrics?.sleepQuality ?? 0}
             color="#c4b5fd"
             glow="rgba(196,181,253,0.5)"
             delay={160}
@@ -566,7 +586,7 @@ export function ProfileScreen({ store, onSignOut }: ProfileScreenProps) {
           <MetricRing
             icon={<HeartPulse className="w-4 h-4 text-success-400" />}
             label="Recovery"
-            value={profile.metrics.recoveryScore}
+            value={profile?.metrics?.recoveryScore ?? 0}
             color="#34d399"
             glow="rgba(52,211,153,0.5)"
             delay={240}
@@ -574,40 +594,42 @@ export function ProfileScreen({ store, onSignOut }: ProfileScreenProps) {
         </div>
       </div>
 
-      {/* Rank Progression */}
-      <div className="glass rounded-2xl p-5 space-y-3 animate-slide-up stagger-3">
-        <h3 className="font-display font-semibold text-sm uppercase tracking-wider text-slate-300">Rank Progression</h3>
-        <div className="flex items-center justify-between gap-1">
-          {(Object.keys(rankConfig) as (keyof typeof rankConfig)[]).map((r) => {
-            const config = rankConfig[r];
-            const currentIdx = Object.keys(rankConfig).indexOf(profile.rank);
-            const thisIdx = Object.keys(rankConfig).indexOf(r);
-            const isUnlocked = thisIdx <= currentIdx;
-            const isCurrent = r === profile.rank;
-            return (
-              <div key={r} className="flex flex-col items-center gap-1 flex-1">
-                <div
-                  className={`w-10 h-10 rounded-xl flex items-center justify-center font-display font-bold text-sm transition-all duration-300 ${
-                    isCurrent ? 'animate-badge-glow scale-110' : ''
-                  }`}
-                  style={{
-                    background: isUnlocked ? config.color + '20' : 'rgba(255,255,255,0.03)',
-                    border: `1px solid ${isUnlocked ? config.color + '60' : 'rgba(255,255,255,0.05)'}`,
-                    color: isUnlocked ? config.color : '#475569',
-                  }}
-                >
-                  {r}
-                </div>
-                {isCurrent && (
-                  <div className="w-1 h-1 rounded-full" style={{ background: config.color, boxShadow: `0 0 6px ${config.glow}` }} />
-                )}
-              </div>
-            );
-          })}
+      {/* Rank History Visual Timeline */}
+      <RankHistoryTimeline
+        rankHistory={store.rankHistory}
+        currentRank={profile.rank}
+        currentLevel={profile.level}
+        currentXp={profile.xp}
+        xpToNext={profile.xpToNext}
+        totalQuestsCompleted={profile.totalQuestsCompleted}
+        onPromoteTest={store.promoteHunter}
+        onRecalibrate={store.recalibrateRankHistory}
+      />
+
+      {/* 🔊 Sounds & Alerts Settings Section */}
+      <div className="glass rounded-2xl p-5 space-y-3 animate-slide-up stagger-3 border border-purple-500/30 glow-primary">
+        <div className="flex items-center justify-between">
+          <div className="flex items-center gap-3">
+            <div className="w-10 h-10 rounded-xl bg-purple-500/20 border border-purple-500/40 flex items-center justify-center text-purple-300 shadow-[0_0_12px_rgba(168,85,247,0.3)]">
+              <Volume2 className="w-5 h-5 text-purple-300" />
+            </div>
+            <div>
+              <h3 className="font-display font-semibold text-sm uppercase tracking-wider text-slate-100 flex items-center gap-2">
+                <span>🔊 Sounds & Alerts</span>
+              </h3>
+              <p className="text-xs text-slate-400 font-mono">
+                Master {store.soundSettings?.masterVolume ?? 80}% · 7 Events Configured
+              </p>
+            </div>
+          </div>
+          <button
+            type="button"
+            onClick={() => setIsSoundsModalOpen(true)}
+            className="px-3.5 py-1.5 gradient-mixed rounded-xl text-xs font-mono uppercase tracking-wider text-white border border-purple-400/40 hover:scale-105 active:scale-95 transition-all shadow-[0_0_10px_rgba(168,85,247,0.3)] cursor-pointer"
+          >
+            Configure
+          </button>
         </div>
-        <p className="text-xs text-slate-500 text-center mt-2">
-          Reach Level {(Object.keys(rankConfig).indexOf(profile.rank) + 1) * 10} to advance to the next rank.
-        </p>
       </div>
 
       {/* Water Reminder System Settings Card */}
@@ -638,14 +660,48 @@ export function ProfileScreen({ store, onSignOut }: ProfileScreenProps) {
         </div>
       </div>
 
-      {/* Sign Out */}
+      {/* Reset Hunter Registration */}
       <button
-        onClick={handleSignOut}
-        className="w-full glass rounded-2xl py-3.5 flex items-center justify-center gap-2 text-sm font-mono uppercase tracking-wider text-slate-400 hover:text-error-400 hover:border-error-500/30 transition-all duration-300 animate-slide-up stagger-4"
+        type="button"
+        onClick={() => setShowResetConfirm(true)}
+        className="w-full glass rounded-2xl py-3.5 flex items-center justify-center gap-2 text-sm font-mono uppercase tracking-wider text-slate-400 hover:text-error-400 hover:border-error-500/30 transition-all duration-300 animate-slide-up stagger-4 cursor-pointer"
       >
-        <LogOut className="w-4 h-4" />
-        Sign Out
+        <RotateCcw className="w-4 h-4" />
+        Reset Hunter Dossier / Re-Register
       </button>
+
+      {/* Reset Confirmation Modal */}
+      {showResetConfirm && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-md animate-fade-in">
+          <div className="glass-strong rounded-3xl p-6 max-w-sm w-full border border-error-500/40 shadow-2xl animate-scale-in text-center">
+            <div className="w-12 h-12 rounded-2xl bg-error-500/20 border border-error-500/40 flex items-center justify-center mx-auto mb-4 text-error-400">
+              <AlertTriangle className="w-6 h-6" />
+            </div>
+            <h3 className="font-display font-bold text-lg text-slate-100 uppercase tracking-wide">
+              Reset Hunter Awakening?
+            </h3>
+            <p className="text-xs font-mono text-slate-400 mt-2 mb-6 leading-relaxed">
+              This will return you to the first-time Hunter Registration screen so you can re-calibrate your codename and biometrics.
+            </p>
+            <div className="flex items-center gap-3">
+              <button
+                type="button"
+                onClick={() => setShowResetConfirm(false)}
+                className="flex-1 py-2.5 rounded-xl glass font-mono text-xs uppercase text-slate-300 hover:text-white"
+              >
+                Cancel
+              </button>
+              <button
+                type="button"
+                onClick={handleResetRegistration}
+                className="flex-1 py-2.5 rounded-xl bg-error-500/20 border border-error-500/50 hover:bg-error-500/30 text-error-300 font-mono text-xs uppercase tracking-wider transition-all"
+              >
+                Confirm Reset
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* Water Reminder Settings Modal */}
       <WaterReminderSettingsModal
@@ -654,6 +710,23 @@ export function ProfileScreen({ store, onSignOut }: ProfileScreenProps) {
         settings={store.waterReminder}
         onUpdateSettings={store.updateWaterReminder}
         onTriggerTestReminder={store.triggerWaterReminder}
+      />
+
+      {/* Permanent XP History Archive Modal */}
+      <XPHistoryModal
+        isOpen={showXPHistory}
+        onClose={() => setShowXPHistory(false)}
+        history={store.xpHistory}
+        totalXP={profile.totalXp ?? profile.xp ?? 0}
+        level={profile.level}
+        rank={profile.rank}
+      />
+
+      {/* 🔊 Custom Sounds & Alerts Modal */}
+      <SoundsAndAlertsModal
+        isOpen={isSoundsModalOpen}
+        onClose={() => setIsSoundsModalOpen(false)}
+        onSettingsSaved={store.updateSoundSettings}
       />
     </div>
   );

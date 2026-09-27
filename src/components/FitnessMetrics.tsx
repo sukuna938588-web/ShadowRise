@@ -7,6 +7,13 @@ interface FitnessMetricsProps {
 }
 
 export function FitnessMetrics({ metrics }: FitnessMetricsProps) {
+  const safeMetrics = {
+    exerciseProgress: Number(metrics?.exerciseProgress) || 0,
+    hydration: Number(metrics?.hydration) || 0,
+    sleepQuality: Number(metrics?.sleepQuality) || 0,
+    recoveryScore: Number(metrics?.recoveryScore) || 0,
+  };
+
   return (
     <div className="glass-strong rounded-2xl p-5 animate-slide-up stagger-1">
       <div className="flex items-center gap-2 mb-4">
@@ -16,7 +23,7 @@ export function FitnessMetrics({ metrics }: FitnessMetricsProps) {
         <MetricRing
           icon={<Dumbbell className="w-4 h-4 text-primary-400" />}
           label="Exercise"
-          value={metrics.exerciseProgress}
+          value={safeMetrics.exerciseProgress}
           color="#a78bfa"
           glow="rgba(167,139,250,0.5)"
           delay={0}
@@ -24,7 +31,7 @@ export function FitnessMetrics({ metrics }: FitnessMetricsProps) {
         <MetricRing
           icon={<Droplets className="w-4 h-4 text-secondary-400" />}
           label="Hydration"
-          value={metrics.hydration}
+          value={safeMetrics.hydration}
           color="#60a5fa"
           glow="rgba(96,165,250,0.5)"
           delay={80}
@@ -32,7 +39,7 @@ export function FitnessMetrics({ metrics }: FitnessMetricsProps) {
         <MetricRing
           icon={<Moon className="w-4 h-4 text-primary-300" />}
           label="Sleep"
-          value={metrics.sleepQuality}
+          value={safeMetrics.sleepQuality}
           color="#c4b5fd"
           glow="rgba(196,181,253,0.5)"
           delay={160}
@@ -40,7 +47,7 @@ export function FitnessMetrics({ metrics }: FitnessMetricsProps) {
         <MetricRing
           icon={<HeartPulse className="w-4 h-4 text-success-400" />}
           label="Recovery"
-          value={metrics.recoveryScore}
+          value={safeMetrics.recoveryScore}
           color="#34d399"
           glow="rgba(52,211,153,0.5)"
           delay={240}

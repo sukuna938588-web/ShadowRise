@@ -1,43 +1,119 @@
 import { useState } from 'react';
-import { Moon, Plus, Star } from 'lucide-react';
-import type { HealthMetrics } from '@/types';
+import { Moon, Sun, Plus, Star, History } from 'lucide-react';
+import type { HealthMetrics, SleepSession } from '@/types';
 
 interface SleepTrackerProps {
   health: HealthMetrics;
   onLogSleep: (hours: number) => void;
+  sleepStartTime?: string | null;
+  latestSession?: SleepSession | null;
+  onOpenHistory?: () => void;
+  onStartSleep?: () => void;
+  onWakeUp?: () => void;
 }
 
-export function SleepTracker({ health, onLogSleep }: SleepTrackerProps) {
+export function SleepTracker({
+  health,
+  onLogSleep,
+  sleepStartTime,
+  latestSession,
+  onOpenHistory,
+  onStartSleep,
+  onWakeUp,
+}: SleepTrackerProps) {
   const [showInput, setShowInput] = useState(false);
-  const [hours, setHours] = useState(health.sleepHours);
+  const safeSleepHours = typeof health?.sleepHours === 'number' && !Number.isNaN(health.sleepHours)
+    ? Math.max(0, health.sleepHours)
+    : 0;
+  const [hours, setHours] = useState(safeSleepHours || 7.5);
 
-  const quality = health.sleepQuality;
+  const quality = typeof health?.sleepQuality === 'number' && !Number.isNaN(health.sleepQuality)
+    ? Math.max(0, health.sleepQuality)
+    : 0;
   const qualityLabel = quality >= 80 ? 'Excellent' : quality >= 60 ? 'Good' : quality >= 40 ? 'Fair' : 'Poor';
-  const sleepProgress = Math.min((health.sleepHours / 8) * 100, 100);
+  const sleepProgress = Math.min((safeSleepHours / 8) * 100, 100);
 
   const handleSubmit = () => {
     onLogSleep(hours);
     setShowInput(false);
   };
 
+  const isSleeping = Boolean(sleepStartTime);
+
   return (
-    <div className="glass-strong rounded-2xl p-5 space-y-4 animate-slide-up stagger-2">
+    <div className="glass-strong rounded-2xl p-5 space-y-4 animate-slide-up stagger-2 relative overflow-hidden">
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-2">
           <div className="w-9 h-9 rounded-xl bg-primary-500/15 border border-primary-500/30 flex items-center justify-center">
             <Moon className="w-4 h-4 text-primary-300" />
           </div>
           <div>
-            <h3 className="font-display font-semibold text-sm uppercase tracking-wider text-slate-200">Sleep Tracker</h3>
-            <p className="text-[10px] font-mono text-slate-500">Last night's rest & quality</p>
+            <div className="flex items-center gap-2">
+              <h3 className="font-display font-semibold text-sm uppercase tracking-wider text-slate-200">Sleep Tracker</h3>
+              {isSleeping && (
+                <span className="text-[9px] font-mono tracking-wider uppercase px-2 py-0.5 rounded bg-primary-500/20 border border-primary-400/50 text-primary-300 font-bold animate-pulse">
+                  Sleeping
+                </span>
+              )}
+            </div>
+            <p className="text-[10px] font-mono text-slate-500">
+              {latestSession
+                ? `Last: ${latestSession.recoveryScore}% Recovery (${latestSession.durationHours}h)`
+                : 'No sleep recorded today'}
+            </p>
           </div>
         </div>
-        <button
-          onClick={() => setShowInput((v) => !v)}
-          className="w-8 h-8 rounded-lg gradient-mixed flex items-center justify-center glow-primary hover:scale-110 transition-transform"
-        >
-          <Plus className="w-4 h-4 text-white" />
-        </button>
+
+        <div className="flex items-center gap-1.5">
+          {/* Quick Sleep / Wake Up toggle button */}
+          {!isSleeping ? (
+            onStartSleep && (
+              <button
+                type="button"
+                onClick={onStartSleep}
+                className="flex items-center gap-1 px-2.5 py-1.5 rounded-lg bg-primary-500/20 hover:bg-primary-500/30 border border-primary-500/40 text-primary-200 text-xs font-mono font-bold uppercase tracking-wider transition-all cursor-pointer shadow-[0_0_10px_rgba(168,85,247,0.3)] hover:scale-105 active:scale-95"
+                title="Initiate Sleep Protocol"
+                aria-label="Initiate Sleep Protocol"
+              >
+                <Moon className="w-3.5 h-3.5 text-primary-300" />
+                <span>Sleep</span>
+              </button>
+            )
+          ) : (
+            onWakeUp && (
+              <button
+                type="button"
+                onClick={onWakeUp}
+                className="flex items-center gap-1 px-2.5 py-1.5 rounded-lg bg-amber-500/25 hover:bg-amber-500/35 border border-amber-400/60 text-amber-200 text-xs font-mono font-bold uppercase tracking-wider transition-all cursor-pointer shadow-[0_0_12px_rgba(245,158,11,0.4)] animate-pulse hover:scale-105 active:scale-95"
+                title="Wake Up & Calculate Recovery"
+                aria-label="Wake Up & Calculate Recovery"
+              >
+                <Sun className="w-3.5 h-3.5 text-amber-300 animate-spin-slow" />
+                <span>Wake Up</span>
+              </button>
+            )
+          )}
+
+          {onOpenHistory && (
+            <button
+              type="button"
+              onClick={onOpenHistory}
+              className="p-1.5 glass rounded-lg text-slate-400 hover:text-white transition-colors"
+              title="Sleep History Archive"
+              aria-label="Sleep History Archive"
+            >
+              <History className="w-4 h-4" />
+            </button>
+          )}
+          <button
+            onClick={() => setShowInput((v) => !v)}
+            className="w-8 h-8 rounded-lg gradient-mixed flex items-center justify-center glow-primary hover:scale-110 transition-transform"
+            title="Manual Sleep Adjust"
+            aria-label="Manual Sleep Adjust"
+          >
+            <Plus className="w-4 h-4 text-white" />
+          </button>
+        </div>
       </div>
 
       {showInput && (
@@ -86,7 +162,7 @@ export function SleepTracker({ health, onLogSleep }: SleepTrackerProps) {
             />
           </svg>
           <div className="absolute inset-0 flex flex-col items-center justify-center">
-            <span className="text-lg font-display font-bold text-primary-200">{health.sleepHours.toFixed(1)}</span>
+            <span className="text-lg font-display font-bold text-primary-200">{safeSleepHours.toFixed(1)}</span>
             <span className="text-[9px] font-mono text-slate-500">hours</span>
           </div>
         </div>
@@ -118,7 +194,7 @@ export function SleepTracker({ health, onLogSleep }: SleepTrackerProps) {
           </div>
           <div className="flex items-center justify-between pt-1">
             <span className="text-[10px] font-mono text-slate-500">Goal: 8.0h</span>
-            <span className="text-[10px] font-mono text-slate-500">HR: {health.heartRate} bpm</span>
+            <span className="text-[10px] font-mono text-slate-500">HR: {health?.heartRate ?? 68} bpm</span>
           </div>
         </div>
       </div>

@@ -24,7 +24,9 @@ export function MetricRing({
   delay = 0,
 }: MetricRingProps) {
   const [progress, setProgress] = useState(0);
-  const percentage = Math.min((value / max) * 100, 100);
+  const safeValue = typeof value === 'number' && !Number.isNaN(value) ? Math.max(0, value) : 0;
+  const safeMax = typeof max === 'number' && max > 0 ? max : 100;
+  const percentage = Math.min((safeValue / safeMax) * 100, 100);
   const strokeWidth = 4;
   const radius = (size - strokeWidth) / 2;
   const circumference = 2 * Math.PI * radius;
@@ -66,7 +68,7 @@ export function MetricRing({
         <div className="absolute inset-0 flex flex-col items-center justify-center">
           {icon}
           <span className="text-sm font-mono font-bold mt-0.5" style={{ color }}>
-            {value}{unit}
+            {Math.round(safeValue)}{unit}
           </span>
         </div>
       </div>

@@ -38,8 +38,8 @@ export const initialQuests: Quest[] = [
     type: 'mindfulness',
     difficulty: 'easy',
     xpReward: 40,
-    completed: true,
-    date: '2026-09-13',
+    completed: false,
+    date: '2026-09-26',
   },
   {
     id: 'q5',
@@ -49,7 +49,7 @@ export const initialQuests: Quest[] = [
     difficulty: 'extreme',
     xpReward: 200,
     completed: false,
-    date: '2026-09-13',
+    date: '2026-09-26',
   },
   {
     id: 'q6',
@@ -58,8 +58,8 @@ export const initialQuests: Quest[] = [
     type: 'nutrition',
     difficulty: 'easy',
     xpReward: 30,
-    completed: true,
-    date: '2026-09-13',
+    completed: false,
+    date: '2026-09-26',
   },
   {
     id: 'q7',

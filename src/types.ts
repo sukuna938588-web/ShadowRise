@@ -19,6 +19,7 @@ export interface UserProfile {
   level: number;
   xp: number;
   xpToNext: number;
+  totalXp?: number;
   streak: number;
   totalQuestsCompleted: number;
   metrics: FitnessMetrics;
@@ -29,6 +30,22 @@ export interface UserProfile {
   gender?: 'male' | 'female' | 'other';
   healthIssues?: HealthIssueKey[];
   healthIssueDetails?: Partial<Record<HealthIssueKey, { severity: HealthSeverity; notes?: string }>>;
+  isRegistered?: boolean;
+  registeredAt?: string;
+  rankHistory?: RankHistoryEntry[];
+}
+
+export interface RankHistoryEntry {
+  id: string;
+  rank: Rank;
+  level: number;
+  title: string;
+  unlockedAt: string; // ISO string
+  questsClearedAtUnlock?: number;
+  totalXpAtUnlock?: number;
+  perksUnlocked?: string[];
+  systemDirective?: string;
+  isInitialAwakening?: boolean;
 }
 
 export type HealthIssueKey =
@@ -200,6 +217,21 @@ export interface HealthMetrics {
   sleepQuality: number;
 }
 
+export interface SleepSession {
+  id: string;
+  startTime: string; // ISO string
+  endTime: string;   // ISO string
+  durationHours: number; // e.g. 7.5
+  durationMinutes: number; // total minutes
+  recoveryScore: number; // 0 - 100
+  energyStatus: string;  // e.g. "Apex Sovereign Vitality"
+  energyStatusKey: 'peak' | 'optimal' | 'moderate' | 'low';
+  sleepQualityLabel: string;
+  xpEarned: number;
+  createdAt: string;
+  date?: string; // YYYY-MM-DD completion date
+}
+
 export interface WeightEntry {
   weightKg: number;
   date: string;
@@ -322,3 +354,12 @@ export interface AlarmHistoryItem {
   action: 'dismissed' | 'snoozed' | 'missed';
   snoozeMinutes?: number;
 }
+
+export interface XPHistoryItem {
+  id: string;
+  date: string;
+  activity: string;
+  xpEarned: number;
+  timestamp: string;
+}
+

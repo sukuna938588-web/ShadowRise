@@ -8,11 +8,13 @@ import {
   History,
   Trash2,
   CheckCircle2,
+  Volume2,
 } from 'lucide-react';
 import type { Store } from '@/store';
 import type { ShadowAlarm } from '@/types';
 import { AlarmCard } from '@/components/AlarmCard';
 import { AlarmEditModal } from '@/components/AlarmEditModal';
+import { SoundsAndAlertsModal } from '@/components/SoundsAndAlertsModal';
 
 interface AlarmsScreenProps {
   store: Store;
@@ -21,6 +23,7 @@ interface AlarmsScreenProps {
 export function AlarmsScreen({ store }: AlarmsScreenProps) {
   const [activeTab, setActiveTab] = useState<'alarms' | 'history'>('alarms');
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+  const [isSoundsModalOpen, setIsSoundsModalOpen] = useState(false);
   const [editingAlarm, setEditingAlarm] = useState<ShadowAlarm | null>(null);
 
   // Live ticking clock
@@ -106,14 +109,26 @@ export function AlarmsScreen({ store }: AlarmsScreenProps) {
           </h1>
         </div>
 
-        <button
-          type="button"
-          onClick={handleOpenCreateModal}
-          className="flex items-center gap-1.5 px-3.5 py-2 rounded-2xl gradient-mixed font-display font-bold text-xs uppercase tracking-wider text-white shadow-lg shadow-primary-500/30 hover:opacity-95 active:scale-95 transition-all"
-        >
-          <Plus className="w-4 h-4" />
-          <span>New Alarm</span>
-        </button>
+        <div className="flex items-center gap-2">
+          <button
+            type="button"
+            onClick={() => setIsSoundsModalOpen(true)}
+            className="flex items-center gap-1.5 px-3 py-2 rounded-2xl glass font-display font-semibold text-xs uppercase tracking-wider text-primary-300 border border-primary-500/30 hover:bg-primary-500/20 active:scale-95 transition-all cursor-pointer"
+            title="Configure Sounds & Alerts"
+          >
+            <Volume2 className="w-4 h-4" />
+            <span className="hidden sm:inline">Sounds & Alerts</span>
+          </button>
+
+          <button
+            type="button"
+            onClick={handleOpenCreateModal}
+            className="flex items-center gap-1.5 px-3.5 py-2 rounded-2xl gradient-mixed font-display font-bold text-xs uppercase tracking-wider text-white shadow-lg shadow-primary-500/30 hover:opacity-95 active:scale-95 transition-all"
+          >
+            <Plus className="w-4 h-4" />
+            <span>New Alarm</span>
+          </button>
+        </div>
       </div>
 
       {/* Live Hunter System Clock Card */}
@@ -358,6 +373,13 @@ export function AlarmsScreen({ store }: AlarmsScreenProps) {
         onSave={handleSaveAlarm}
         onDelete={store.deleteAlarm}
         initialAlarm={editingAlarm}
+      />
+
+      {/* 🔊 Custom Sounds & Alerts Modal */}
+      <SoundsAndAlertsModal
+        isOpen={isSoundsModalOpen}
+        onClose={() => setIsSoundsModalOpen(false)}
+        onSettingsSaved={store.updateSoundSettings}
       />
     </div>
   );
