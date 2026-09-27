@@ -16,6 +16,7 @@ import { WorkoutAlarmPopup } from '@/components/WorkoutAlarmPopup';
 import { FullScreenAlarmModal } from '@/components/FullScreenAlarmModal';
 import { XPNotificationHUD } from '@/components/XPNotificationHUD';
 import { RankUpCinematicModal } from '@/components/RankUpCinematicModal';
+import { FirstTimeInstallPrompt } from '@/components/FirstTimeInstallPrompt';
 
 function App() {
   const [screen, setScreen] = useState<ScreenName>('home');
@@ -42,6 +43,8 @@ function App() {
           store={store}
           onComplete={() => setScreen('home')}
         />
+        {/* First-Time PWA Install Prompt */}
+        <FirstTimeInstallPrompt />
       </div>
     );
   }
@@ -108,6 +111,9 @@ function App() {
           totalXp={store.rankUpCelebration.totalXp}
         />
       )}
+
+      {/* First-Time PWA Install Prompt */}
+      <FirstTimeInstallPrompt />
     </div>
   );
 }
