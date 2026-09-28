@@ -171,18 +171,16 @@ export const FirstTimeInstallPrompt: React.FC = () => {
         {!showInstructions ? (
           <div className="space-y-5 text-center relative z-10">
             {/* Monarch Crest Icon with Pulse */}
-            <div className="mx-auto w-16 h-16 rounded-2xl bg-purple-950/60 border border-purple-500/50 flex items-center justify-center shadow-[0_0_25px_rgba(168,85,247,0.5)] relative">
+            <div className="mx-auto w-16 h-16 rounded-2xl bg-purple-950/60 border border-purple-500/50 flex items-center justify-center shadow-[0_0_25px_rgba(168,85,247,0.5)] relative overflow-hidden">
               <div className="absolute inset-0 rounded-2xl border border-purple-400/30 animate-ping opacity-40 pointer-events-none" />
               <img
-                src="/icon.svg"
+                src="/app-icon-1024.jpg"
                 alt="ShadowRise"
-                className="w-10 h-10 object-contain drop-shadow-[0_0_10px_rgba(192,132,252,0.8)]"
+                className="w-full h-full object-cover rounded-2xl drop-shadow-[0_0_10px_rgba(192,132,252,0.8)]"
                 onError={(e) => {
-                  // Fallback icon if svg fails to render
-                  (e.currentTarget as HTMLImageElement).style.display = 'none';
+                  (e.currentTarget as HTMLImageElement).src = '/icon.svg';
                 }}
               />
-              <Download className="w-8 h-8 text-purple-300 absolute" style={{ display: 'none' }} />
             </div>
 
             {/* Prompt Title */}
