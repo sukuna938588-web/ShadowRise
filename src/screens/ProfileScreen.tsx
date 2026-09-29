@@ -33,6 +33,7 @@ import { WaterReminderSettingsModal } from '@/components/WaterReminderModal';
 import { RankHistoryTimeline } from '@/components/RankHistoryTimeline';
 import { XPHistoryModal } from '@/components/XPHistoryModal';
 import { SoundsAndAlertsModal } from '@/components/SoundsAndAlertsModal';
+import { ShadowRiseLogoModal } from '@/components/ShadowRiseLogoModal';
 import { rankConfig } from '@/data/initialData';
 import { HUNTER_AVATARS } from '@/data/hunterAvatars';
 
@@ -50,6 +51,7 @@ export function ProfileScreen({ store, onSignOut }: ProfileScreenProps) {
   const [showAvatarPicker, setShowAvatarPicker] = useState(false);
   const [isWaterSettingsOpen, setIsWaterSettingsOpen] = useState(false);
   const [isSoundsModalOpen, setIsSoundsModalOpen] = useState(false);
+  const [isLogoModalOpen, setIsLogoModalOpen] = useState(false);
   const [showResetConfirm, setShowResetConfirm] = useState(false);
 
   // Form edit states
@@ -660,6 +662,39 @@ export function ProfileScreen({ store, onSignOut }: ProfileScreenProps) {
         </div>
       </div>
 
+      {/* ⚔️ ShadowRise Gaming Logo & Guild Insignia */}
+      <div className="glass rounded-2xl p-5 space-y-3 animate-slide-up stagger-3 border border-purple-500/30 glow-primary relative overflow-hidden">
+        <div className="flex items-center justify-between relative z-10">
+          <div className="flex items-center gap-3">
+            <div className="w-12 h-12 rounded-xl bg-purple-950/80 border border-purple-400/50 p-1 flex items-center justify-center text-purple-300 shadow-[0_0_15px_rgba(168,85,247,0.4)] overflow-hidden">
+              <img
+                src="/shadowrise-gaming-logo.svg"
+                alt="ShadowRise Logo"
+                className="w-full h-full object-contain drop-shadow-[0_0_8px_rgba(192,132,252,0.8)]"
+                onError={(e) => {
+                  (e.currentTarget as HTMLImageElement).src = '/logo.png';
+                }}
+              />
+            </div>
+            <div>
+              <h3 className="font-display font-semibold text-sm uppercase tracking-wider text-slate-100 flex items-center gap-2">
+                <span>⚔️ Official Gaming Logo</span>
+              </h3>
+              <p className="text-xs text-slate-400 font-mono">
+                Crystal sword crest, 4K wallpapers & transparent vector SVGs
+              </p>
+            </div>
+          </div>
+          <button
+            type="button"
+            onClick={() => setIsLogoModalOpen(true)}
+            className="px-3.5 py-1.5 gradient-mixed rounded-xl text-xs font-mono uppercase tracking-wider text-white font-bold border border-purple-400/40 shadow-[0_0_12px_rgba(168,85,247,0.35)] hover:scale-105 active:scale-95 transition-all cursor-pointer"
+          >
+            Inspect
+          </button>
+        </div>
+      </div>
+
       {/* Reset Hunter Registration */}
       <button
         type="button"
@@ -727,6 +762,12 @@ export function ProfileScreen({ store, onSignOut }: ProfileScreenProps) {
         isOpen={isSoundsModalOpen}
         onClose={() => setIsSoundsModalOpen(false)}
         onSettingsSaved={store.updateSoundSettings}
+      />
+
+      {/* ShadowRise Gaming Emblem & Guild Insignia Modal */}
+      <ShadowRiseLogoModal
+        isOpen={isLogoModalOpen}
+        onClose={() => setIsLogoModalOpen(false)}
       />
     </div>
   );

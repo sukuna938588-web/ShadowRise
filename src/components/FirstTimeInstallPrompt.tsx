@@ -174,9 +174,9 @@ export const FirstTimeInstallPrompt: React.FC = () => {
             <div className="mx-auto w-16 h-16 rounded-2xl bg-purple-950/60 border border-purple-500/50 flex items-center justify-center shadow-[0_0_25px_rgba(168,85,247,0.5)] relative overflow-hidden">
               <div className="absolute inset-0 rounded-2xl border border-purple-400/30 animate-ping opacity-40 pointer-events-none" />
               <img
-                src="/app-icon-1024.jpg"
-                alt="ShadowRise"
-                className="w-full h-full object-cover rounded-2xl drop-shadow-[0_0_10px_rgba(192,132,252,0.8)]"
+                src="/pwa-512x512.png"
+                alt="ShadowRise Official App Icon"
+                className="w-full h-full object-cover rounded-2xl drop-shadow-[0_0_15px_rgba(192,132,252,0.9)]"
                 onError={(e) => {
                   (e.currentTarget as HTMLImageElement).src = '/icon.svg';
                 }}

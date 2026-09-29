@@ -1,0 +1,308 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1024 1024" width="1024" height="1024">
+  <defs>
+    <!-- Dark Cosmic Aura & Violet Glow Gradients -->
+    <radialGradient id="centerManaCore" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#d8b4fe" stop-opacity="1" />
+      <stop offset="25%" stop-color="#a855f7" stop-opacity="0.8" />
+      <stop offset="55%" stop-color="#7e22ce" stop-opacity="0.4" />
+      <stop offset="85%" stop-color="#3b0764" stop-opacity="0.15" />
+      <stop offset="100%" stop-color="#1e0538" stop-opacity="0" />
+    </radialGradient>
+
+    <!-- Crystal Sword Core Blade Gradient -->
+    <linearGradient id="crystalBladeGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#ffffff" />
+      <stop offset="15%" stop-color="#f3e8ff" />
+      <stop offset="35%" stop-color="#c084fc" />
+      <stop offset="65%" stop-color="#9333ea" />
+      <stop offset="90%" stop-color="#581c87" />
+      <stop offset="100%" stop-color="#2e1065" />
+    </linearGradient>
+
+    <!-- Faceted Crystal Left Edge -->
+    <linearGradient id="crystalFacetLeft" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#e9d5ff" />
+      <stop offset="50%" stop-color="#a855f7" />
+      <stop offset="100%" stop-color="#6b21a8" />
+    </linearGradient>
+
+    <!-- Faceted Crystal Right Edge -->
+    <linearGradient id="crystalFacetRight" x1="100%" y1="0%" x2="0%" y2="0%">
+      <stop offset="0%" stop-color="#f5d0fe" />
+      <stop offset="50%" stop-color="#c084fc" />
+      <stop offset="100%" stop-color="#7e22ce" />
+    </linearGradient>
+
+    <!-- Metallic Silver Chrome Bevel -->
+    <linearGradient id="silverChrome" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#ffffff" />
+      <stop offset="20%" stop-color="#e2e8f0" />
+      <stop offset="45%" stop-color="#94a3b8" />
+      <stop offset="55%" stop-color="#cbd5e1" />
+      <stop offset="80%" stop-color="#64748b" />
+      <stop offset="100%" stop-color="#334155" />
+    </linearGradient>
+
+    <!-- Deep Obsidian Crescent Blade Body -->
+    <linearGradient id="obsidianBlade" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#1e1b4b" />
+      <stop offset="35%" stop-color="#0f0728" />
+      <stop offset="70%" stop-color="#1e0b36" />
+      <stop offset="100%" stop-color="#090514" />
+    </linearGradient>
+
+    <!-- Electric Neon Violet Edge Highlight -->
+    <linearGradient id="neonVioletGlow" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#fdf4ff" />
+      <stop offset="30%" stop-color="#d946ef" />
+      <stop offset="70%" stop-color="#a855f7" />
+      <stop offset="100%" stop-color="#6366f1" />
+    </linearGradient>
+
+    <!-- Runic Circular Crest Gradient -->
+    <linearGradient id="crestRuneGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#c084fc" />
+      <stop offset="40%" stop-color="#7c3aed" />
+      <stop offset="75%" stop-color="#a855f7" />
+      <stop offset="100%" stop-color="#e879f9" />
+    </linearGradient>
+
+    <!-- Filters for Magical Aura and Intense Energy Glow -->
+    <filter id="intenseEnergyGlow" x="-50%" y="-50%" width="200%" height="200%">
+      <feGaussianBlur stdDeviation="24" result="blurDeep" />
+      <feGaussianBlur stdDeviation="10" result="blurMid" />
+      <feGaussianBlur stdDeviation="3" result="blurSharp" />
+      <feMerge>
+        <feMergeNode in="blurDeep" />
+        <feMergeNode in="blurMid" />
+        <feMergeNode in="blurSharp" />
+        <feMergeNode in="SourceGraphic" />
+      </feMerge>
+    </filter>
+
+    <filter id="arcaneHalo" x="-40%" y="-40%" width="180%" height="180%">
+      <feGaussianBlur stdDeviation="36" result="ambient" />
+    </filter>
+  </defs>
+
+  <!-- Ambient Shadow Mana Cloud / Cosmic Smoke Aura -->
+  <circle cx="512" cy="512" r="380" fill="url(#centerManaCore)" filter="url(#arcaneHalo)" />
+
+  <!-- Ethereal Shadow Wings Background Flow -->
+  <g opacity="0.35" filter="url(#intenseEnergyGlow)">
+    <path d="M 512 512 Q 320 380 220 260 Q 300 390 390 530 Z" fill="#9333ea" />
+    <path d="M 512 512 Q 704 380 804 260 Q 724 390 634 530 Z" fill="#9333ea" />
+    <path d="M 512 580 Q 280 660 170 540 Q 310 650 450 630 Z" fill="#7c3aed" />
+    <path d="M 512 580 Q 744 660 854 540 Q 714 650 574 630 Z" fill="#7c3aed" />
+  </g>
+
+  <!-- Elegant Circular Runic Crest -->
+  <g filter="url(#intenseEnergyGlow)">
+    <!-- Outer Arcane Shield Ring -->
+    <circle cx="512" cy="512" r="360" fill="none" stroke="url(#silverChrome)" stroke-width="4.5" stroke-opacity="0.85" />
+    
+    <!-- Outer Runic Ring with Segmented Notches -->
+    <circle cx="512" cy="512" r="340" fill="none" stroke="url(#crestRuneGrad)" stroke-width="3" stroke-dasharray="28 14 8 14" stroke-opacity="0.9" />
+
+    <!-- Secondary Concentric Energy Ring -->
+    <circle cx="512" cy="512" r="308" fill="none" stroke="#c084fc" stroke-width="1.8" stroke-dasharray="8 8" stroke-opacity="0.6" />
+
+    <!-- Inner Core Containment Ring -->
+    <circle cx="512" cy="512" r="268" fill="none" stroke="url(#silverChrome)" stroke-width="3" stroke-opacity="0.7" />
+
+    <!-- Cardinal Runic Diamond Seals (North, South, East, West) -->
+    <polygon points="512,130 522,150 512,170 502,150" fill="#ffffff" stroke="#c084fc" stroke-width="2" />
+    <polygon points="512,854 522,874 512,894 502,874" fill="#ffffff" stroke="#c084fc" stroke-width="2" />
+    <polygon points="130,512 150,502 170,512 150,522" fill="#ffffff" stroke="#c084fc" stroke-width="2" />
+    <polygon points="854,512 874,502 894,512 874,522" fill="#ffffff" stroke="#c084fc" stroke-width="2" />
+
+    <!-- Diagonal Runic Star Points -->
+    <circle cx="272" cy="272" r="5" fill="#f5d0fe" />
+    <circle cx="752" cy="272" r="5" fill="#f5d0fe" />
+    <circle cx="272" cy="752" r="5" fill="#f5d0fe" />
+    <circle cx="752" cy="752" r="5" fill="#f5d0fe" />
+  </g>
+
+  <!-- Sharp Crescent-Shaped Blades (Left & Right Flanking Wings) -->
+  <g>
+    <!-- Left Crescent Outer Blade -->
+    <!-- Base obsidian blade body with deep shadow -->
+    <path d="M 230 190 
+             C 140 330 140 650 250 780 
+             C 170 650 180 370 230 190 Z" 
+          fill="url(#obsidianBlade)" 
+          stroke="url(#silverChrome)" 
+          stroke-width="3" />
+
+    <!-- Left Crescent Silver Chrome Cutting Edge -->
+    <path d="M 230 190 
+             C 130 330 130 650 250 780 
+             C 195 670 190 380 230 190 Z" 
+          fill="url(#silverChrome)" 
+          opacity="0.9" />
+
+    <!-- Left Crescent Neon Violet Inner Edge Glow -->
+    <path d="M 235 210 
+             C 175 350 175 620 245 750" 
+          fill="none" 
+          stroke="url(#neonVioletGlow)" 
+          stroke-width="4.5" 
+          stroke-linecap="round" 
+          filter="url(#intenseEnergyGlow)" />
+
+    <!-- Left Inner Crescent Dagger Spikes -->
+    <path d="M 290 280 
+             C 210 390 220 590 310 680 
+             C 260 580 260 410 290 280 Z" 
+          fill="url(#obsidianBlade)" 
+          stroke="url(#silverChrome)" 
+          stroke-width="2.5" />
+    <path d="M 290 280 
+             C 240 390 245 570 310 680" 
+          fill="none" 
+          stroke="#c084fc" 
+          stroke-width="3.5" 
+          filter="url(#intenseEnergyGlow)" />
+
+    <!-- Right Crescent Outer Blade (Symmetrical Mirror) -->
+    <path d="M 794 190 
+             C 884 330 884 650 774 780 
+             C 854 650 844 370 794 190 Z" 
+          fill="url(#obsidianBlade)" 
+          stroke="url(#silverChrome)" 
+          stroke-width="3" />
+
+    <!-- Right Crescent Silver Chrome Cutting Edge -->
+    <path d="M 794 190 
+             C 894 330 894 650 774 780 
+             C 829 670 834 380 794 190 Z" 
+          fill="url(#silverChrome)" 
+          opacity="0.9" />
+
+    <!-- Right Crescent Neon Violet Inner Edge Glow -->
+    <path d="M 789 210 
+             C 849 350 849 620 779 750" 
+          fill="none" 
+          stroke="url(#neonVioletGlow)" 
+          stroke-width="4.5" 
+          stroke-linecap="round" 
+          filter="url(#intenseEnergyGlow)" />
+
+    <!-- Right Inner Crescent Dagger Spikes -->
+    <path d="M 734 280 
+             C 814 390 804 590 714 680 
+             C 764 580 764 410 734 280 Z" 
+          fill="url(#obsidianBlade)" 
+          stroke="url(#silverChrome)" 
+          stroke-width="2.5" />
+    <path d="M 734 280 
+             C 784 390 779 570 714 680" 
+          fill="none" 
+          stroke="#c084fc" 
+          stroke-width="3.5" 
+          filter="url(#intenseEnergyGlow)" />
+  </g>
+
+  <!-- Glowing Purple Crystal Sword (At the Exact Center) -->
+  <g filter="url(#intenseEnergyGlow)">
+    <!-- Sword Aura & Flare -->
+    <line x1="512" y1="120" x2="512" y2="820" stroke="#a855f7" stroke-width="22" stroke-linecap="round" opacity="0.4" />
+    <line x1="512" y1="140" x2="512" y2="780" stroke="#e879f9" stroke-width="10" stroke-linecap="round" opacity="0.6" />
+
+    <!-- Crystal Sword - Left Facet Blade (Sharp Geometric Facets) -->
+    <path d="M 512 110 
+             L 468 230 
+             L 472 630 
+             L 512 680 Z" 
+          fill="url(#crystalFacetLeft)" 
+          stroke="#ffffff" 
+          stroke-width="1.5" />
+
+    <!-- Crystal Sword - Right Facet Blade -->
+    <path d="M 512 110 
+             L 556 230 
+             L 552 630 
+             L 512 680 Z" 
+          fill="url(#crystalFacetRight)" 
+          stroke="#ffffff" 
+          stroke-width="1.5" />
+
+    <!-- Crystalline Diamond Core Cutouts / Inner Mana Channel -->
+    <polygon points="512,150 494,240 512,320 530,240" fill="#ffffff" opacity="0.95" />
+    <polygon points="512,330 496,430 512,520 528,430" fill="#fdf4ff" opacity="0.9" />
+    <polygon points="512,530 498,590 512,650 526,590" fill="#f5d0fe" opacity="0.9" />
+
+    <!-- Central White-Hot Mana Spine / Cutting Light Beam -->
+    <line x1="512" y1="114" x2="512" y2="675" stroke="#ffffff" stroke-width="4.5" stroke-linecap="round" />
+
+    <!-- Sword Crossguard: Arcane Dragon / Winged Monarch Hilt -->
+    <!-- Left Guard Wing -->
+    <path d="M 512 680 
+             L 440 670 
+             L 360 635 
+             L 340 660 
+             L 435 705 
+             L 512 725 Z" 
+          fill="url(#silverChrome)" 
+          stroke="#ffffff" 
+          stroke-width="2" />
+    <!-- Left Guard Glow Accent -->
+    <line x1="365" y1="645" x2="445" y2="685" stroke="#c084fc" stroke-width="3" />
+
+    <!-- Right Guard Wing -->
+    <path d="M 512 680 
+             L 584 670 
+             L 664 635 
+             L 684 660 
+             L 589 705 
+             L 512 725 Z" 
+          fill="url(#silverChrome)" 
+          stroke="#ffffff" 
+          stroke-width="2" />
+    <!-- Right Guard Glow Accent -->
+    <line x1="659" y1="645" x2="579" y2="685" stroke="#c084fc" stroke-width="3" />
+
+    <!-- Guard Central Amethyst Mana Gem (Heart of the Blade) -->
+    <polygon points="512,670 534,698 512,726 490,698" fill="#fdf4ff" stroke="#ffffff" stroke-width="2.5" />
+    <circle cx="512" cy="698" r="6" fill="#a855f7" />
+
+    <!-- Sword Grip / Hilt Wrap (Obsidian & Silver Ribs) -->
+    <rect x="498" y="725" width="28" height="120" rx="6" fill="#090514" stroke="url(#silverChrome)" stroke-width="2" />
+    <line x1="498" y1="745" x2="526" y2="745" stroke="#c084fc" stroke-width="2.5" />
+    <line x1="498" y1="770" x2="526" y2="770" stroke="#c084fc" stroke-width="2.5" />
+    <line x1="498" y1="795" x2="526" y2="795" stroke="#c084fc" stroke-width="2.5" />
+    <line x1="498" y1="820" x2="526" y2="820" stroke="#c084fc" stroke-width="2.5" />
+
+    <!-- Sword Pommel: Faceted Amethyst Crystal Finial -->
+    <polygon points="512,845 536,870 512,915 488,870" fill="url(#crystalBladeGrad)" stroke="#ffffff" stroke-width="2" />
+    <circle cx="512" cy="870" r="5" fill="#ffffff" />
+  </g>
+
+  <!-- Floating Arcane Particles & Cosmic Embers (Ultra Fine Glow) -->
+  <g fill="#f5d0fe" opacity="0.9" filter="url(#intenseEnergyGlow)">
+    <!-- High energy sparks near blade tip -->
+    <circle cx="512" cy="80" r="4.5" fill="#ffffff" />
+    <circle cx="485" cy="115" r="3" />
+    <circle cx="538" cy="118" r="3" />
+    <polygon points="512,50 516,65 512,80 508,65" fill="#ffffff" />
+
+    <!-- Sparks floating along the crest -->
+    <circle cx="340" cy="220" r="3.5" />
+    <circle cx="684" cy="220" r="3.5" />
+    <circle cx="210" cy="420" r="4" />
+    <circle cx="814" cy="420" r="4" />
+    <circle cx="310" cy="530" r="3.2" />
+    <circle cx="714" cy="530" r="3.2" />
+    <circle cx="410" cy="380" r="2.5" />
+    <circle cx="614" cy="380" r="2.5" />
+    <circle cx="380" cy="740" r="3" />
+    <circle cx="644" cy="740" r="3" />
+    <circle cx="470" cy="880" r="2.5" />
+    <circle cx="554" cy="880" r="2.5" />
+
+    <!-- Arcane 4-point Diamond Stars -->
+    <polygon points="260,350 263,356 269,359 263,362 260,368 257,362 251,359 257,356" fill="#ffffff" />
+    <polygon points="764,350 767,356 773,359 767,362 764,368 761,362 755,359 761,356" fill="#ffffff" />
+    <polygon points="512,300 514,306 520,308 514,310 512,316 510,310 504,308 510,306" fill="#ffffff" />
+  </g>
+</svg>

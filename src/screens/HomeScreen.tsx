@@ -29,6 +29,7 @@ import { HunterRecoveryReportModal } from '@/components/HunterRecoveryReportModa
 import { SleepHistoryModal } from '@/components/SleepHistoryModal';
 import { XPProgressCard } from '@/components/XPProgressCard';
 import { XPHistoryModal } from '@/components/XPHistoryModal';
+import { ShadowRiseLogoModal } from '@/components/ShadowRiseLogoModal';
 import { rankConfig } from '@/data/initialData';
 
 interface HomeScreenProps {
@@ -49,6 +50,7 @@ export function HomeScreen({ store, onNavigate }: HomeScreenProps) {
   const [isRankUpCinematicOpen, setIsRankUpCinematicOpen] = useState(false);
   const [isSleepHistoryOpen, setIsSleepHistoryOpen] = useState(false);
   const [isXPHistoryOpen, setIsXPHistoryOpen] = useState(false);
+  const [isLogoModalOpen, setIsLogoModalOpen] = useState(false);
   const [previewReport, setPreviewReport] = useState<SleepSession | null>(null);
 
   // Workout Logger & History Modals
@@ -84,12 +86,34 @@ export function HomeScreen({ store, onNavigate }: HomeScreenProps) {
     <div className="px-4 pt-[env(safe-area-inset-top)] pb-28 sm:pb-32 space-y-5">
       {/* Top bar */}
       <div className="flex items-center justify-between pt-4 animate-fade-in">
-        <div className="flex items-center gap-2">
-          <div className="w-8 h-8 rounded-lg gradient-mixed flex items-center justify-center glow-primary">
-            <Flame className="w-4 h-4 text-white" />
+        <button
+          type="button"
+          onClick={() => setIsLogoModalOpen(true)}
+          className="flex items-center gap-2 group cursor-pointer text-left focus:outline-none"
+          title="View ShadowRise Guild Crest & Gaming Logo"
+        >
+          <div className="relative w-8 h-8 rounded-xl bg-purple-950/80 border border-purple-500/40 p-0.5 flex items-center justify-center glow-primary shadow-[0_0_15px_rgba(168,85,247,0.4)] group-hover:scale-105 group-hover:border-purple-400 transition-all overflow-hidden">
+            <img
+              src="/shadowrise-gaming-logo.svg"
+              alt="ShadowRise Gaming Logo"
+              className="w-full h-full object-contain drop-shadow-[0_0_8px_rgba(192,132,252,0.8)]"
+              onError={(e) => {
+                (e.currentTarget as HTMLImageElement).src = '/logo.png';
+              }}
+            />
           </div>
-          <span className="font-display font-bold text-lg tracking-wider gradient-text">SHADOWRISE</span>
-        </div>
+          <div>
+            <div className="flex items-center gap-1">
+              <span className="font-display font-bold text-lg tracking-wider gradient-text group-hover:brightness-125 transition-all">
+                SHADOWRISE
+              </span>
+              <Sparkles className="w-2.5 h-2.5 text-purple-400 opacity-60 group-hover:opacity-100 transition-opacity" />
+            </div>
+            <div className="text-[9px] font-mono tracking-widest uppercase text-slate-500 group-hover:text-purple-300 transition-colors">
+              HUNTER SYSTEM
+            </div>
+          </div>
+        </button>
         <button
           onClick={() => onNavigate('profile')}
           className="glass rounded-full px-3 py-1.5 flex items-center gap-1.5 hover:border-primary-400/30 transition-all"
@@ -444,6 +468,12 @@ export function HomeScreen({ store, onNavigate }: HomeScreenProps) {
         totalXP={profile.totalXp ?? profile.xp ?? 0}
         level={profile.level}
         rank={profile.rank}
+      />
+
+      {/* ShadowRise Gaming Emblem & Guild Insignia Modal */}
+      <ShadowRiseLogoModal
+        isOpen={isLogoModalOpen}
+        onClose={() => setIsLogoModalOpen(false)}
       />
     </div>
   );

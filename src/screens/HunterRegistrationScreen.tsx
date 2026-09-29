@@ -108,9 +108,16 @@ export function HunterRegistrationScreen({ store, onComplete }: HunterRegistrati
         </div>
 
         <div className="relative mb-3 group">
-          <div className="absolute -inset-3 rounded-2xl bg-primary-600/30 blur-lg pointer-events-none animate-glow-pulse" />
-          <div className="relative w-16 h-16 rounded-2xl gradient-mixed flex items-center justify-center glow-primary border border-primary-400/50 shadow-2xl">
-            <Flame className="w-8 h-8 text-white" />
+          <div className="absolute -inset-4 rounded-3xl bg-purple-600/35 blur-xl pointer-events-none animate-glow-pulse" />
+          <div className="relative w-20 h-20 rounded-2xl bg-purple-950/80 border border-purple-400/60 shadow-[0_0_25px_rgba(168,85,247,0.5)] p-1 flex items-center justify-center overflow-hidden">
+            <img
+              src="/shadowrise-gaming-logo.svg"
+              alt="ShadowRise Gaming Logo"
+              className="w-full h-full object-contain drop-shadow-[0_0_12px_rgba(192,132,252,0.9)]"
+              onError={(e) => {
+                (e.currentTarget as HTMLImageElement).src = '/logo.png';
+              }}
+            />
           </div>
         </div>
 
